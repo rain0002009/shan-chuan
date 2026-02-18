@@ -1,0 +1,28 @@
+{
+  "name": "shan-chuan",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.17.1",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm run build:web && wrangler dev",
+    "build:web": "vite build",
+    "deploy": "pnpm run build:web && wrangler deploy",
+    "typecheck": "tsc --noEmit && tsc -p web/tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "ahooks": "^3.9.5",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.11",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react": "^5.1.0",
+    "@cloudflare/workers-types": "^4.20260216.0",
+    "typescript": "^5.9.2",
+    "unocss": "^66.5.4",
+    "vite": "^7.1.9",
+    "wrangler": "^4.52.0"
+  }
+}
