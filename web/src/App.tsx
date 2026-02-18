@@ -196,6 +196,31 @@ export default function App() {
   const timerProgress = remainingMs === null ? 0 : Math.max(0, Math.min(100, Math.round((remainingMs / ROOM_DURATION_MS) * 100)));
   const timerUrgent = remainingMs !== null && remainingMs <= 5 * 60 * 1000;
 
+  useEffect(() => {
+    if (remainingMs === null || remainingMs > 0 || roomClosed) {
+      return;
+    }
+    setRoomClosed(true);
+    setRoomCloseReason("expired");
+    setIsConnected(false);
+    setParticipantCount(0);
+
+    if (heartbeatTimerRef.current) {
+      clearInterval(heartbeatTimerRef.current);
+      heartbeatTimerRef.current = null;
+    }
+    if (heartbeatTimeoutRef.current) {
+      clearTimeout(heartbeatTimeoutRef.current);
+      heartbeatTimeoutRef.current = null;
+    }
+    if (reconnectTimerRef.current) {
+      clearTimeout(reconnectTimerRef.current);
+      reconnectTimerRef.current = null;
+    }
+
+    setStatusText(isOwner ? "房间已到期，可再次开启" : "房间已到期，等待房主开启");
+  }, [isOwner, remainingMs, roomClosed]);
+
   function syncServerClock(serverNow: number): void {
     const parsed = Number(serverNow);
     if (!Number.isFinite(parsed) || parsed <= 0) {
