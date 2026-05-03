@@ -1,5 +1,7 @@
 # 闪传
 
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/rain0002009/shan-chuan)
+
 基于 Cloudflare Workers + Durable Objects + Vite + React 的匿名实时传输助手。
 
 ## 功能特性
