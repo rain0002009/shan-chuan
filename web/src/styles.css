@@ -1,3 +1,9 @@
+html,
+body,
+#root {
+  height: 100%;
+}
+
 :root {
   --bg-1: #ff6f61;
   --bg-2: #ffc75f;
@@ -16,6 +22,7 @@
   --radius-sm: 12px;
   --shadow-xl: 0 20px 70px rgba(15, 23, 42, 0.26);
   --shadow-sm: 0 8px 20px rgba(15, 23, 42, 0.1);
+  --app-vh: 100dvh;
 }
 
 * {
@@ -24,12 +31,14 @@
 
 body {
   margin: 0;
+  min-height: 100dvh;
   font-family: "MiSans", "HarmonyOS Sans SC", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
   color: var(--ink);
 }
 
 .app-bg {
-  min-height: 100vh;
+  min-height: var(--app-vh);
+  height: var(--app-vh);
   padding: 24px;
   display: grid;
   place-items: center;
@@ -51,6 +60,7 @@ body {
 
 .shell {
   width: min(1040px, 100%);
+  height: min(760px, calc(var(--app-vh) - 48px));
   min-height: min(760px, 92vh);
   background: var(--surface);
   backdrop-filter: blur(14px);
@@ -68,6 +78,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  min-height: 0;
+  overflow-y: auto;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.3));
 }
 
@@ -270,11 +282,13 @@ button:disabled {
   display: grid;
   grid-template-rows: 1fr auto;
   min-height: 0;
+  overflow: hidden;
   background: rgba(255, 255, 255, 0.45);
 }
 
 .feed {
   padding: 20px;
+  min-height: 0;
   overflow-y: auto;
   display: grid;
   gap: 12px;
@@ -397,6 +411,7 @@ button:disabled {
   border-top: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.78);
   padding: 14px 16px;
+  flex-shrink: 0;
 }
 
 .composer {
@@ -409,6 +424,7 @@ textarea {
   resize: none;
   min-height: 48px;
   max-height: 170px;
+  overflow-y: auto;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   padding: 10px 12px;
@@ -474,6 +490,7 @@ textarea:focus {
 @media (max-width: 920px) {
   .shell {
     grid-template-columns: 1fr;
+    height: calc(var(--app-vh) - 48px);
     min-height: 94vh;
   }
 
@@ -505,7 +522,8 @@ textarea:focus {
 
   .shell {
     width: 100%;
-    min-height: 100dvh;
+    height: var(--app-vh);
+    min-height: var(--app-vh);
     border-radius: 0;
   }
 
@@ -515,6 +533,7 @@ textarea:focus {
 
   .actions {
     padding: 10px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
   }
 
   .note {

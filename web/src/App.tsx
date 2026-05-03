@@ -106,6 +106,7 @@ function renderTextWithLinks(text: string): Array<string | { text: string; href:
 export default function App() {
   const wsRef = useRef<WebSocket | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const reconnectTimerRef = useRef<number | null>(null);
   const reconnectAttemptRef = useRef(0);
   const heartbeatTimerRef = useRef<number | null>(null);
@@ -158,6 +159,34 @@ export default function App() {
       setColor(randomColor());
     }
   }, [color, setColor]);
+
+  useEffect(() => {
+    const updateViewportHeight = (): void => {
+      const viewportHeight = Math.round(window.visualViewport?.height ?? window.innerHeight);
+      document.documentElement.style.setProperty("--app-vh", `${viewportHeight}px`);
+    };
+
+    updateViewportHeight();
+    window.addEventListener("resize", updateViewportHeight);
+    window.visualViewport?.addEventListener("resize", updateViewportHeight);
+    window.visualViewport?.addEventListener("scroll", updateViewportHeight);
+
+    return () => {
+      window.removeEventListener("resize", updateViewportHeight);
+      window.visualViewport?.removeEventListener("resize", updateViewportHeight);
+      window.visualViewport?.removeEventListener("scroll", updateViewportHeight);
+    };
+  }, []);
+
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) {
+      return;
+    }
+
+    textarea.style.height = "auto";
+    textarea.style.height = `${Math.min(textarea.scrollHeight, 170)}px`;
+  }, [textValue]);
 
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -893,9 +922,15 @@ export default function App() {
           <div className="actions">
             <div className="composer">
               <textarea
+                ref={textareaRef}
                 maxLength={4000}
                 value={textValue}
                 onChange={(event) => setTextValue(event.target.value)}
+                onInput={(event) => {
+                  const target = event.currentTarget;
+                  target.style.height = "auto";
+                  target.style.height = `${Math.min(target.scrollHeight, 170)}px`;
+                }}
                 placeholder="输入要发送的内容"
                 onKeyDown={(event) => {
                   if (event.key === "Enter" && !event.shiftKey) {
